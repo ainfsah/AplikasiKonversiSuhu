@@ -4,6 +4,10 @@
  */
 package aplikasikonversisuhu;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ASUS
@@ -11,12 +15,62 @@ package aplikasikonversisuhu;
 public class tugas2new extends javax.swing.JFrame {
 
     /**
-     * Creates new form tugas2new
+     * Creates new form 
      */
     public tugas2new() {
         initComponents();
-    }
+         txtInput.addKeyListener(new KeyAdapter() {
+           
+        @Override
+        public void keyReleased(KeyEvent e) {
+            try {
+                // Memanggil fungsi konversi otomatis saat nilai input berubah
+                double inputValue = Double.parseDouble(txtInput.getText());
+                String fromScale, toScale;
 
+                // Cek arah konversi berdasarkan radio button yang dipilih
+                if (jRadioButton1.isSelected()) {  // kiri ke kanan
+                    fromScale = (String) jComboBox1.getSelectedItem();
+                    toScale = (String) jComboBox2.getSelectedItem();
+                } else if (jRadioButton2.isSelected()) {  // kanan ke kiri
+                    fromScale = (String) jComboBox2.getSelectedItem();
+                    toScale = (String) jComboBox1.getSelectedItem();
+                } else {
+                    // Konversi otomatis Celcius ke Fahrenheit
+                    fromScale = "Celcius";
+                    toScale = "Fahrenheit";
+                    JOptionPane.showMessageDialog(tugas2new.this, "Karena tidak memilih konversi, maka akan secara otomatis dikonversi dari Celcius ke Fahrenheit.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                }
+
+                if (fromScale.equals("Skala") || toScale.equals("Skala")) {
+                    JOptionPane.showMessageDialog(tugas2new.this, "Pilih skala suhu yang valid untuk konversi.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (fromScale.equals(toScale)) {
+                    JOptionPane.showMessageDialog(tugas2new.this, "Pilih skala suhu yang berbeda untuk konversi.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Lakukan konversi suhu
+                double result = KonversiSuhuHelper.convert(inputValue, fromScale, toScale);
+                txtOutput.setText("Hasil Konversi: " + result + " " + toScale);
+            } catch (NumberFormatException ex) {
+                txtOutput.setText("Masukkan nilai numerik yang valid.");
+            }
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            char c = e.getKeyChar();
+            // Jika karakter yang dimasukkan bukan angka atau titik desimal, batalkan input tersebut
+            if (!Character.isDigit(c) && c != '.') {
+                e.consume(); // Menghapus input yang bukan angka
+                JOptionPane.showMessageDialog(null, "Masukkan hanya angka!", "Input Salah", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    });
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,13 +82,13 @@ public class tugas2new extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtInput = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
-        jTextField2 = new javax.swing.JTextField();
+        txtOutput = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         btnKonversi = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
@@ -48,6 +102,12 @@ public class tugas2new extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI Semibold", 2, 14)); // NOI18N
         jLabel2.setText("MASUKKAN ANGKA DI SINI");
+
+        txtInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtInputActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setForeground(new java.awt.Color(102, 255, 255));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Skala", "Celcius", "Fahrenheit", "Kelvin", "Reamur" }));
@@ -70,9 +130,9 @@ public class tugas2new extends javax.swing.JFrame {
         jRadioButton2.setBackground(new java.awt.Color(102, 255, 255));
         jRadioButton2.setText("Kanan ke kiri");
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        txtOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                txtOutputActionPerformed(evt);
             }
         });
 
@@ -89,8 +149,18 @@ public class tugas2new extends javax.swing.JFrame {
         });
 
         btnHapus.setText("HAPUS");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         btnKeluar.setText("KELUAR");
+        btnKeluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKeluarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -102,7 +172,7 @@ public class tugas2new extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addContainerGap()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(btnHapus)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -118,7 +188,7 @@ public class tugas2new extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jLabel2)
-                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(txtInput, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -143,7 +213,7 @@ public class tugas2new extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -157,7 +227,7 @@ public class tugas2new extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
                 .addGap(1, 1, 1)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnKonversi)
                 .addGap(18, 18, 18)
@@ -201,12 +271,78 @@ public class tugas2new extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void btnKonversiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKonversiActionPerformed
-        // TODO add your handling code here:
+      
+        try {
+        double inputValue = Double.parseDouble(txtInput.getText());
+        String fromScale, toScale;
+
+        // Cek arah konversi berdasarkan radio button yang dipilih
+        if (jRadioButton1.isSelected()) {  // kiri ke kanan
+            fromScale = (String) jComboBox1.getSelectedItem();
+            toScale = (String) jComboBox2.getSelectedItem();
+        } else if (jRadioButton2.isSelected()) {  // kanan ke kiri
+            fromScale = (String) jComboBox2.getSelectedItem();
+            toScale = (String) jComboBox1.getSelectedItem();
+        } else {
+            //  konversi otomatis Celcius ke Fahrenheit
+            fromScale = "Celcius";
+            toScale = "Fahrenheit";
+            JOptionPane.showMessageDialog(this, "Karena tidak memilih konversi, maka akan secara otomatis dikonversi dari Celcius ke Fahrenheit.", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        if (fromScale.equals("Skala") || toScale.equals("Skala")) {
+            JOptionPane.showMessageDialog(this, "Pilih skala suhu yang valid untuk konversi.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (fromScale.equals(toScale)) {
+            JOptionPane.showMessageDialog(this, "Pilih skala suhu yang berbeda untuk konversi.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Lakukan konversi suhu
+        double result = KonversiSuhuHelper.convert(inputValue, fromScale, toScale);
+        txtOutput.setText("Hasil Konversi: " + result + " " + toScale);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Masukkan nilai numerik yang valid.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     }//GEN-LAST:event_btnKonversiActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void txtOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOutputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_txtOutputActionPerformed
+
+    private void txtInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtInputActionPerformed
+         txtInput.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (!Character.isDigit(c)) {
+                    e.consume(); // Remove non-digit character
+                    JOptionPane.showMessageDialog(null, "Masukkan hanya angka!", "Input Salah", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+    }//GEN-LAST:event_txtInputActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+    txtInput.setText("");
+    
+    // Memindahkan fokus kembali ke txtAngka dan menempatkan kursor di awal
+    txtInput.requestFocus();  
+    txtInput.selectAll(); 
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
+     int response = JOptionPane.showConfirmDialog(this, "Yakin lah pian handak keluar?", "Konfirmasi Keluar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+    // Jika pengguna memilih "Yes"
+    if (response == JOptionPane.YES_OPTION) {
+        System.exit(0); // Keluar dari aplikasi
+    }
+    
+    }//GEN-LAST:event_btnKeluarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -237,6 +373,7 @@ public class tugas2new extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new tugas2new().setVisible(true);
             }
@@ -257,7 +394,7 @@ public class tugas2new extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtInput;
+    private javax.swing.JTextField txtOutput;
     // End of variables declaration//GEN-END:variables
 }
