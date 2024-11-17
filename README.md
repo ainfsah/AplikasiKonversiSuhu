@@ -34,7 +34,7 @@ Pengguna dapat memilih arah konversi dari satu skala suhu ke skala suhu lainnya.
 - **Tugas**: Tugas 2
 
 ## Demo
-
+![Demo Aplikasi](img/AplikasiKonversiSuhu.gif)
 
 ---
 
